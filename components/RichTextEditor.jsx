@@ -14,11 +14,11 @@ const initialData = [
 
 const RichTextEditor = () => {
   const [content, setContent] = useState("");
-  //   console.log(content);
+  // console.log(content);
 
   const [data, setData] = useState(initialData);
   console.log(Array.isArray(data));
-
+  // setup editor
   const editor = useEditor({
     extensions: [StarterKit],
     onUpdate: ({ editor }) => {
@@ -29,7 +29,7 @@ const RichTextEditor = () => {
   if (!editor) {
     return null;
   }
-
+  // submit data to db
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -46,7 +46,7 @@ const RichTextEditor = () => {
       console.log(error);
     }
   };
-
+  // get data from db
   const getData = async () => {
     try {
       const res = await fetch("/api/add", {
@@ -62,13 +62,23 @@ const RichTextEditor = () => {
 
   return (
     <div>
-      <div>
+      <div className="space-x-2">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
           className="bg-black text-white rounded px-3 font-bold mb-2"
         >
           Bold
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setItalic().run()}
+          disabled={!editor.can().chain().focus().toggleBold().run()}
+          className="bg-black text-white rounded px-3 font-bold mb-2"
+        >
+          Italic
+        </button>
+        <button onClick={() => editor.chain().focus().toggleStrike().run()}>
+          Strike
         </button>
       </div>
 
@@ -90,9 +100,12 @@ const RichTextEditor = () => {
 
       <div>
         {data.map((item, index) => (
-          <div key={index} className="bg-orange-200 space-y-2 mt-2 w-60 px-4 rounded hover:bg-orange-300 transition-all">
+          <div
+            key={index}
+            className="bg-orange-200 space-y-2 mt-2 w-60 px-4 rounded hover:bg-orange-300 transition-all"
+          >
             <div dangerouslySetInnerHTML={{ __html: item.richText }} />
-            <div dangerouslySetInnerHTML={{__html: item.createdAt}}/>
+            <div dangerouslySetInnerHTML={{ __html: item.createdAt }} />
           </div>
         ))}
       </div>
