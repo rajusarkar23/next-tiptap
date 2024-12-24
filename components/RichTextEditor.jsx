@@ -14,7 +14,7 @@ const initialData = [
 
 const RichTextEditor = () => {
   const [content, setContent] = useState("");
-  // console.log(content);
+  console.log(content);
 
   const [data, setData] = useState(initialData);
   console.log(Array.isArray(data));
@@ -104,7 +104,13 @@ const RichTextEditor = () => {
             key={index}
             className="bg-orange-200 space-y-2 mt-2 w-60 px-4 rounded hover:bg-orange-300 transition-all"
           >
-            <div dangerouslySetInnerHTML={{ __html: item.richText }} />
+            {/* preserve the empty p tags with br */}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: item.richText.replace(/<p>\s*<\/p>/g, "<br>"),
+              }}
+              className="whitespace-pre"
+            />
             <div dangerouslySetInnerHTML={{ __html: item.createdAt }} />
           </div>
         ))}
