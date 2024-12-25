@@ -27,17 +27,17 @@ const RichTextEditor = () => {
     },
   });
 
-    // add image
-    const addImage = useCallback(() => {
-      if (!editor) {
-        return
-      }
-      const url = window.prompt("URL");
-  
-      if (url) {
-        editor.chain().focus().setImage({ src: url }).run();
-      }
-    }, [editor]);
+  // add image
+  const addImage = useCallback(() => {
+    if (!editor) {
+      return;
+    }
+    const url = window.prompt("URL");
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  }, [editor]);
 
   if (!editor) {
     return null;
