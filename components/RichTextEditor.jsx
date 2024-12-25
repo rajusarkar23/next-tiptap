@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
 
 const initialData = [
   {
@@ -20,11 +21,23 @@ const RichTextEditor = () => {
   console.log(Array.isArray(data));
   // setup editor
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Image],
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML());
     },
   });
+
+    // add image
+    const addImage = useCallback(() => {
+      if (!editor) {
+        return
+      }
+      const url = window.prompt("URL");
+  
+      if (url) {
+        editor.chain().focus().setImage({ src: url }).run();
+      }
+    }, [editor]);
 
   if (!editor) {
     return null;
@@ -60,6 +73,8 @@ const RichTextEditor = () => {
     }
   };
 
+  // const url = window.prompt("URL")
+
   return (
     <div>
       <div className="space-x-2">
@@ -77,8 +92,25 @@ const RichTextEditor = () => {
         >
           Italic
         </button>
-        <button onClick={() => editor.chain().focus().toggleStrike().run()}>
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className="bg-black text-white rounded px-3 font-bold mb-2"
+        >
           Strike
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className="bg-black text-white rounded px-3 font-bold mb-2"
+        >
+          li
+        </button>
+
+        {/* add image */}
+        <button
+          onClick={addImage}
+          className="bg-black text-white rounded px-3 font-bold mb-2"
+        >
+          Add image
         </button>
       </div>
 
@@ -109,7 +141,7 @@ const RichTextEditor = () => {
               dangerouslySetInnerHTML={{
                 __html: item.richText.replace(/<p>\s*<\/p>/g, "<br>"),
               }}
-              className="whitespace-pre"
+              className="whitespace-pre-wrap [&>ul]:list-disc [&>ul]:pl-6"
             />
             <div dangerouslySetInnerHTML={{ __html: item.createdAt }} />
           </div>
