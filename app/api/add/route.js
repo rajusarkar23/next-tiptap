@@ -1,6 +1,7 @@
 import dbConnection from "@/lib/db";
 import { TipTap } from "@/models/tiptap.model";
 import { NextResponse } from "next/server";
+export const runtime = 'edge';
 
 export async function POST(req) {
   const { richText } = await req.json();
